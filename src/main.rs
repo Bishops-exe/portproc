@@ -87,6 +87,7 @@ fn main() {
         .format_timestamp(None)
         .format_target(false)
         .format_level(false)
+        .target(env_logger::Target::Stdout)
         .init();
 
     let s = System::new_all();
