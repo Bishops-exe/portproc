@@ -1,3 +1,7 @@
+<div align="center">
+    <img src="./assets/icon.svg" alt="icon" width="120px">
+</div>
+
 <h1 align="center">Portproc</h1>
 
 <div align="center">
@@ -10,7 +14,7 @@
     </a>
     <img alt="Static Badge" src="https://img.shields.io/badge/unsafe-1_block-008800">
     <a href="https://github.com/Bishops-exe/portproc/pulls" title="Open a pull request!">
-        <img alt="Open a pull request!" src="https://img.shields.io/badge/PR-encouraged-000088">
+        <img alt="Open a pull request!" src="https://img.shields.io/badge/PR-create one!-008800">
     </a>
     <a href="https://github.com/Bishops-exe/portproc/issues/new" title="Report a bug!">
         <img alt="Report a bug!" src="https://img.shields.io/badge/Bug%3F-report_it!-880000">
@@ -49,11 +53,8 @@ inside [./src/portmap.rs](https://github.com/Bishops-exe/portproc/blob/main/src/
 ## Support development!
 
 <a href="https://github.com/Bishops-exe/portproc/pulls" title="Create a pull request!">Pull requests</a>
-and <a href="https://github.com/Bishops-exe/portproc/issues" title="Create an issue!">issues</a> are always welcome and
-encouraged!
-
+and <a href="https://github.com/Bishops-exe/portproc/issues" title="Create an issue!">issues</a> are always welcome!
 If you find this repository interesting, consider giving us a star!
-
 You can also donate through [GitHub Sponsors!](https://github.com/sponsors/bishops-exe)
 
 ## License
