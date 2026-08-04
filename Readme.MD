@@ -52,10 +52,14 @@ inside [./src/portmap.rs](https://github.com/Bishops-exe/portproc/blob/main/src/
 
 ## Support development!
 
-<a href="https://github.com/Bishops-exe/portproc/pulls" title="Create a pull request!">Pull requests</a>
-and <a href="https://github.com/Bishops-exe/portproc/issues" title="Create an issue!">issues</a> are always welcome!
-If you find this repository interesting, consider giving us a star!
-You can also donate through [GitHub Sponsors!](https://github.com/sponsors/bishops-exe)
+- <a href="https://github.com/Bishops-exe/portproc/pulls" title="Create a pull request!">Pull requests</a>
+and <a href="https://github.com/Bishops-exe/portproc/issues" title="Create an issue!">issues for bugs and crashes</a> are always welcome!
+
+- You can also suggest a new feature to make this tool even better!
+
+- If you find this repository interesting, consider giving us a star!
+
+- You can also donate through [GitHub Sponsors!](https://github.com/sponsors/bishops-exe)
 
 ## License
 
