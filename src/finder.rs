@@ -4,13 +4,14 @@ use std::collections::HashMap;
 use sysinfo::Pid;
 
 pub fn get_port_map() -> HashMap<Port, Pid> {
-    let mut map = HashMap::new();
     // Query both IPv4 and IPv6 for both TCP and UDP protocols
     let af_flags = AddressFamilyFlags::IPV4 | AddressFamilyFlags::IPV6;
     let proto_flags = ProtocolFlags::TCP | ProtocolFlags::UDP;
 
     // Fetch the active socket system table
     let sockets_info = get_sockets_info(af_flags, proto_flags).unwrap_or_default();
+
+    let mut map = HashMap::with_capacity(sockets_info.len());
 
     for si in sockets_info {
         // Extract the first associated PID if it exists. A PID of 0 means the
