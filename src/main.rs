@@ -122,54 +122,55 @@ fn main() {
     }
 
     while let Some(task) = to_operate.pop_front() {
-        if let Some(proc) = s.process(task.pid) {
-            let string_proc = process_to_string(proc);
+        let Some(proc) = s.process(task.pid) else {
+            continue;
+        };
+        let string_proc = process_to_string(proc);
 
-            info!("{} -> {}", task.port, string_proc);
-            if cli_args.kill {
-                proc.kill();
-                info!("Task {} has been killed!", string_proc);
+        info!("{} -> {}", task.port, string_proc);
+        if cli_args.kill {
+            proc.kill();
+            info!("Task {} has been killed!", string_proc);
+        }
+        if cli_args.restart {
+            let cwd = proc.cwd().map(|p| p.to_path_buf());
+            let args = proc.cmd();
+            let path = proc
+                .exe()
+                .map(|x| x.as_os_str().to_os_string())
+                .or_else(|| args.first().cloned())
+                .map(|x| x.display().to_string())
+                .unwrap_or("<unknown>".into());
+
+            proc.kill();
+            info!("Task {} has been killed for restart!", string_proc);
+            info!(
+                "Spawning process: {} {}",
+                path,
+                args[1..].join(" ".as_ref()).to_string_lossy()
+            );
+
+            let mut command = Command::new(&path);
+            command.args(&args[1..]);
+            if let Some(cwd) = &cwd {
+                command.current_dir(cwd);
             }
-            if cli_args.restart {
-                let cwd = proc.cwd().map(|p| p.to_path_buf());
-                let args = proc.cmd();
-                let path = proc
-                    .exe()
-                    .map(|x| x.as_os_str().to_os_string())
-                    .or_else(|| args.first().cloned())
-                    .map(|x| x.display().to_string())
-                    .unwrap_or("<unknown>".into());
 
-                proc.kill();
-                info!("Task {} has been killed for restart!", string_proc);
-                info!(
-                    "Spawning process: {} {}",
-                    path,
-                    args[1..].join(" ".as_ref()).to_string_lossy()
-                );
-
-                let mut command = Command::new(&path);
-                command.args(&args[1..]);
-                if let Some(cwd) = &cwd {
-                    command.current_dir(cwd);
-                }
-
-                if !cli_args.attach {
-                    detach(&mut command);
-                    detach_stdio(&mut command);
-                }
-                match command.spawn() {
-                    Ok(mut child) => {
-                        info!("Restarted {} as new PID {}", string_proc, child.id());
-                        if cli_args.attach {
-                            if let Some((w, _)) = term_size::dimensions() {
-                                info!("{}", "-".repeat(w))
-                            }
-                            child.wait().unwrap();
+            if !cli_args.attach {
+                detach(&mut command);
+                detach_stdio(&mut command);
+            }
+            match command.spawn() {
+                Ok(mut child) => {
+                    info!("Restarted {} as new PID {}", string_proc, child.id());
+                    if cli_args.attach {
+                        if let Some((w, _)) = term_size::dimensions() {
+                            info!("{}", "-".repeat(w))
                         }
+                        child.wait().unwrap();
                     }
-                    Err(e) => error!("Failed to restart {}: {}", path, e),
                 }
+                Err(e) => error!("Failed to restart {}: {}", path, e),
             }
         }
     }
