@@ -17,7 +17,9 @@ use std::borrow::Cow;
 
 use log::{error, info};
 use std::collections::VecDeque;
+use std::ffi::OsString;
 use std::fmt;
+use std::path::Path;
 use std::process::Command;
 use sysinfo::{Pid, System};
 
@@ -139,8 +141,8 @@ fn main() {
             let args = proc.cmd();
             let path = proc
                 .exe()
-                .map(|x| x.as_os_str())
-                .or_else(|| args.first().map(|x| x.as_os_str()))
+                .map(Path::as_os_str)
+                .or_else(|| args.first().map(OsString::as_os_str))
                 .map(|o| match o.to_string_lossy() {
                     Cow::Borrowed(s) => s,
                     Cow::Owned(_) => unreachable!(),
