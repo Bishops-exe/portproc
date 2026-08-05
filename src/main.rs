@@ -125,6 +125,7 @@ fn main() {
         let Some(proc) = s.process(task.pid) else {
             continue;
         };
+
         let string_proc = process_to_string(proc);
 
         info!("{} -> {}", task.port, string_proc);
@@ -137,8 +138,8 @@ fn main() {
             let args = proc.cmd();
             let path = proc
                 .exe()
-                .map(|x| x.as_os_str().to_os_string())
-                .or_else(|| args.first().cloned())
+                .map(|x| x.as_os_str())
+                .or_else(|| args.first().map(|x| x.as_os_str()))
                 .map(|x| x.display().to_string())
                 .unwrap_or("<unknown>".into());
 
