@@ -139,6 +139,7 @@ fn main() {
         if cli_args.restart {
             let cwd = proc.cwd();
             let args = proc.cmd();
+            let args_without_exe = &args[1..];
             let path = proc
                 .exe()
                 .map(Path::as_os_str)
@@ -154,11 +155,11 @@ fn main() {
             info!(
                 "Spawning process: {} {}",
                 path,
-                args[1..].join(" ".as_ref()).to_string_lossy()
+                args_without_exe.join(" ".as_ref()).to_string_lossy()
             );
 
             let mut command = Command::new(path);
-            command.args(&args[1..]);
+            command.args(args_without_exe);
             if let Some(cwd) = cwd {
                 command.current_dir(cwd);
             }
