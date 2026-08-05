@@ -97,26 +97,25 @@ fn main() {
 
     let port_map = get_port_map();
 
-    let mut to_operate: VecDeque<OperatingPort> = VecDeque::new();
-
-    let ports: &mut dyn Iterator<Item = &Port> = if cli_args.all {
-        &mut port_map.keys()
+    let mut to_operate: VecDeque<(Port, Pid)> = if cli_args.all {
+        VecDeque::from_iter(port_map)
     } else {
-        &mut cli_args.port.iter()
-    };
+        cli_args
+            .port
+            .into_iter()
+            .filter_map(|port| {
+                let Some(pid) = port_map.get(&port) else {
+                    if !cli_args.ignore_unused {
+                        Errors::PortNotInUse(port).throw(&mut Args::command());
+                    }
 
-    for port in ports {
-        if let Some(pid) = port_map.get(port) {
-            to_operate.push_back(OperatingPort {
-                port: *port,
-                pid: *pid,
-            });
-        } else {
-            if !cli_args.ignore_unused {
-                Errors::PortNotInUse(*port).throw(&mut Args::command());
-            }
-        }
-    }
+                    return None;
+                };
+
+                Some((port, *pid))
+            })
+            .collect()
+    };
 
     to_operate.make_contiguous().sort();
 
@@ -125,13 +124,13 @@ fn main() {
     }
 
     while let Some(task) = to_operate.pop_front() {
-        let Some(proc) = s.process(task.pid) else {
+        let Some(proc) = s.process(task.1) else {
             continue;
         };
 
         let string_proc = process_to_string(proc);
 
-        info!("{} -> {}", task.port, string_proc);
+        info!("{} -> {}", task.0, string_proc);
         if cli_args.kill {
             proc.kill();
             info!("Task {} has been killed!", string_proc);
