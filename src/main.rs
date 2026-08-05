@@ -13,6 +13,7 @@ use crate::portmap::preset;
 use crate::util::{detach, detach_stdio, process_to_string};
 use clap::CommandFactory;
 use clap::Parser;
+use std::borrow::Cow;
 
 use log::{error, info};
 use std::collections::VecDeque;
@@ -140,8 +141,11 @@ fn main() {
                 .exe()
                 .map(|x| x.as_os_str())
                 .or_else(|| args.first().map(|x| x.as_os_str()))
-                .map(|x| x.display().to_string())
-                .unwrap_or("<unknown>".into());
+                .map(|o| match o.to_string_lossy() {
+                    Cow::Borrowed(s) => s,
+                    Cow::Owned(_) => unreachable!(),
+                })
+                .unwrap_or_else(|| "<unknown>");
 
             proc.kill();
             info!("Task {} has been killed for restart!", string_proc);
@@ -151,7 +155,7 @@ fn main() {
                 args[1..].join(" ".as_ref()).to_string_lossy()
             );
 
-            let mut command = Command::new(&path);
+            let mut command = Command::new(path);
             command.args(&args[1..]);
             if let Some(cwd) = cwd {
                 command.current_dir(cwd);
