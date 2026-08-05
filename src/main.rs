@@ -134,7 +134,7 @@ fn main() {
             info!("Task {} has been killed!", string_proc);
         }
         if cli_args.restart {
-            let cwd = proc.cwd().map(|p| p.to_path_buf());
+            let cwd = proc.cwd();
             let args = proc.cmd();
             let path = proc
                 .exe()
@@ -153,7 +153,7 @@ fn main() {
 
             let mut command = Command::new(&path);
             command.args(&args[1..]);
-            if let Some(cwd) = &cwd {
+            if let Some(cwd) = cwd {
                 command.current_dir(cwd);
             }
 
