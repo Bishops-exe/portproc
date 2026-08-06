@@ -43,12 +43,6 @@ pub struct Port {
     pub(crate) protocol: Protocol,
 }
 
-#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord)]
-pub struct OperatingPort {
-    port: Port,
-    pid: Pid,
-}
-
 impl fmt::Display for Port {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{} {}", self.protocol, self.port)
