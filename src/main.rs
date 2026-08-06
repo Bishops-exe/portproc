@@ -23,9 +23,8 @@ use std::path::Path;
 use std::process::Command;
 use sysinfo::{Pid, System};
 
-#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord, Default)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord)]
 pub enum Protocol {
-    #[default]
     Tcp,
     Udp,
 }
@@ -37,7 +36,7 @@ impl fmt::Display for Protocol {
     }
 }
 
-#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord, Default)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord)]
 pub struct Port {
     pub(crate) port: u16,
     pub(crate) protocol: Protocol,
